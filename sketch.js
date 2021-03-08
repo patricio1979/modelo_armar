@@ -30,7 +30,6 @@ let actX, actY;
 // esta el mouse presionado sobre la notacion?
 let over_clave=false, over_cuarto=false, over_acento=false, over_fff=false, over_sostenido=false;
 
-
 function preload() {
     acento = loadImage('notacion/acento.png'); //dims 79, 54
     clave_sol = loadImage('notacion/clave_sol.png'); // 126, 341
@@ -41,8 +40,8 @@ function preload() {
 
 function setup() {
   pixelDensity(1);    
-  var cnv = createCanvas(s_width, s_height);
-  cnv.position(s_width/9, s_height/9);
+  cnv = createCanvas(s_width, s_height);
+  cnv.position(10, 10);
   startT=millis();
   //--- boton comienzo
   botonitoDos = createButton('comenzar');
