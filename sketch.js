@@ -80,7 +80,7 @@ function draw() {
 
   //--- boton evaluacion
   botonito = createButton(cuerda);
-  botonito.position(s_width + 20, s_height - 30);
+  botonito.position(s_width + 20, s_height - 15);
   botonito.mousePressed(posiciones);
 }
 
