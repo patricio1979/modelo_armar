@@ -111,7 +111,10 @@ function posiciones(){
 
   //copiamos al clipboard las variables XY
   lista.push(clave_sol_x,clave_sol_y,cuarto_x,cuarto_y,acento_x,acento_y,fff_x,fff_y,sostenido_x,sostenido_y, aCount, bCount, cCount, dCount, startT);
-  copyToClipboard(lista);
+  setTimeout(copyToClipboard(lista), 1000);
+ 
+  //mensaje para terminar
+  cuerda = 'Listo, pega el texto en el chat';
 }
 
 function barrer(){
@@ -136,8 +139,6 @@ function barrer(){
   }
   print(aCount,bCount,cCount,dCount);
   loop();
-  //mensaje para terminar
-  cuerda = 'Listo, pega el texto en el chat';
 }
 
 function copyToClipboard(text) {
