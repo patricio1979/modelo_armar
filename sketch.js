@@ -42,11 +42,11 @@ function preload() {
 function setup() {
   createCanvas(s_width, s_height);
   pixelDensity(1);
-  position(s_width - (s_width/9), s_height - (s_height/9));
+  position((s_width/9), (s_height/9));
   startT=millis();
   //--- boton comienzo
   botonitoDos = createButton('comenzar');
-  botonitoDos.position(s_width + 10, 10);
+  botonitoDos.position(s_width + 20, 10);
   botonitoDos.mousePressed(resetSketch);
 }
 
@@ -81,7 +81,7 @@ function draw() {
 
   //--- boton evaluacion
   botonito = createButton(cuerda);
-  botonito.position(s_width + 10, s_height - 30);
+  botonito.position(s_width + 20, s_height - 30);
   botonito.mousePressed(posiciones);
 }
 
