@@ -40,9 +40,9 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(s_width, s_height);
-  pixelDensity(1);
-  position(s_width/9, s_height/9);
+  pixelDensity(1);    
+  var cnv = createCanvas(s_width, s_height);
+  cnv.position(s_width/9, s_height/9);
   startT=millis();
   //--- boton comienzo
   botonitoDos = createButton('comenzar');
