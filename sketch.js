@@ -12,6 +12,19 @@ let im_clave, im_cuarto, im_acento, im_fff, im_sostenido;
 //coordenadas de la notacion
 let clave_sol_x = 0, clave_sol_y = 0, cuarto_x = 0, cuarto_y = (clave_sol_y + size_h + (341 * size)), acento_x = 0, acento_y = (cuarto_y + size_h + (197 * size)), fff_x = 0, fff_y = (acento_y + size_h + (54 * size)), sostenido_x = 0, sostenido_y = (fff_y + size_h + (113 * size));
 
+//botones
+let botonito, botonitoDos;
+let cambio = false;
+
+//comentario
+var cuerda = 'evaluar';
+
+//Huffman 2 bits
+let aCount = 0, bCount = 0, cCount = 0, dCount = 0;
+
+//delay
+let startT, delayTime = 100;
+
 //posicion relativa del mouse
 let actX, actY;
 // esta el mouse presionado sobre la notacion?
@@ -27,35 +40,118 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(s_width, s_height);
+  cnv = createCanvas(s_width, s_height);
+  cnv.pixelDensity(1);
+  cnv.position(s_width - (s_width/9), s_height - (s_height/9));
+  startT=millis();
+  //--- boton comienzo
+  botonitoDos = createButton('comenzar');
+  botonitoDos.position(s_width + 10, 10);
+  botonitoDos.mousePressed(resetSketch);
 }
 
 function draw() {
-    background(255);
-    //marco
-    rect(0, 0, s_width, s_height);
+  background(255);
 
-    //--- lineas de compas
-    line( size_w*2, size_h*7, size_w*10, size_h*7 );
-    line( size_w*2, size_h*8, size_w*10, size_h*8 );
-    line( size_w*2, size_h*9, size_w*10, size_h*9 );
-    line( size_w*2, size_h*10, size_w*10, size_h*10 );
-    line( size_w*2, size_h*11, size_w*10, size_h*11 );
-    stroke(0);
-    strokeWeight(2);
+  //marco
+  fill(255);
+  stroke(2);
+  rect(0, 0, s_width, s_height);
 
-    //--- notacion
-    im_clave = image(clave_sol, clave_sol_x, clave_sol_y, (126 * size), (341 * size));
-    im_cuarto = image(cuarto, cuarto_x, cuarto_y, (62 * size), (197 * size));
-    im_acento = image(acento, acento_x, acento_y, (79 * size), (54 * size));
-    im_fff = image(fff, fff_x, fff_y, (192 * size), (113 * size));
-    im_sostenido = image(sostenido, sostenido_x, sostenido_y, (45 * size), (154 * size));
-    im_clave;
-    im_cuarto;
-    im_acento:
-    im_fff;
-    im_sostenido;
+  //--- lineas de compas
+  line( size_w*2, size_h*7, size_w*10, size_h*7 );
+  line( size_w*2, size_h*8, size_w*10, size_h*8 );
+  line( size_w*2, size_h*9, size_w*10, size_h*9 );
+  line( size_w*2, size_h*10, size_w*10, size_h*10 );
+  line( size_w*2, size_h*11, size_w*10, size_h*11 );
+  stroke(0);
+  strokeWeight(2);
 
+  //--- notacion
+  im_clave = image(clave_sol, clave_sol_x, clave_sol_y, (126 * size), (341 * size));
+  im_cuarto = image(cuarto, cuarto_x, cuarto_y, (62 * size), (197 * size));
+  im_acento = image(acento, acento_x, acento_y, (79 * size), (54 * size));
+  im_fff = image(fff, fff_x, fff_y, (192 * size), (113 * size));
+  im_sostenido = image(sostenido, sostenido_x, sostenido_y, (45 * size), (154 * size));
+  im_clave;
+  im_cuarto;
+  im_acento:
+  im_fff;
+  im_sostenido;
+
+  //--- boton evaluacion
+  botonito = createButton(cuerda);
+  botonito.position(s_width + 10, s_height - 30);
+  botonito.mousePressed(posiciones);
+}
+
+function resetSketch(){
+  clave_sol_x = 0, clave_sol_y = 0, cuarto_x = 0, cuarto_y = (clave_sol_y + size_h + (341 * size)), acento_x = 0, acento_y = (cuarto_y + size_h + (197 * size)), fff_x = 0, fff_y = (acento_y + size_h + (54 * size)), sostenido_x = 0, sostenido_y = (fff_y + size_h + (113 * size));
+  cuerda = 'evaluar';
+  startT = millis();
+  cambio = true;
+}
+
+function posiciones(){
+  var lista = [];
+  cuerda = 'procesando, no cierres';
+  noLoop();
+  loadPixels();
+
+  //primero convertimos el canvas a imagen
+  //var imagen = get();
+
+  //orden para barrer imagen y buscar pares comunes
+  setTimeout(barrer, 500);
+
+  //tomamos el delta
+  if (cambio == true) {
+    startT = millis() - startT;
+  }
+  cambio = false;
+
+  //copiamos al clipboard las variables XY
+  lista.push(clave_sol_x,clave_sol_y,cuarto_x,cuarto_y,acento_x,acento_y,fff_x,fff_y,sostenido_x,sostenido_y, aCount, bCount, cCount, dCount, startT);
+  copyToClipboard(lista);
+}
+
+function barrer(){
+  //barremos imagen y comparamos por pares
+  for (i = 0; i < (s_height); i++){
+    for (j = 0; j < (s_width*4); j+=8){
+
+      if (pixels[i+j] != 255){ //si es negro
+        if (pixels[i+j+4] != 255) { //y si el que sigue (+4) tambien es negro
+          aCount++; //0 0
+        } else { //si el que sigue no es negro
+          bCount++; //0 255
+        }
+      } else { //si es blanco
+        if (pixels[i+j+4] == 255) { //si el que sigue tambien es blanco
+          dCount++; //255 255
+        } else { //si el que sigue no es blanco
+          cCount++; //255 0
+        }
+      }
+    }
+  }
+  print(aCount,bCount,cCount,dCount);
+  loop();
+  //mensaje para terminar
+  cuerda = 'Listo, pega el texto en el chat';
+}
+
+function copyToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    // to avoid breaking orgain page when copying more words
+    // cant copy when adding below this code
+    // dummy.style.display = 'none'
+    document.body.appendChild(dummy);
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
 }
 
 function mousePressed(){
@@ -121,15 +217,3 @@ function windowResized() {
   windowWidth = s_width;
   windowHeight = s_height;
 }
-
-//    if (mouseX > clave_sol_x && mouseX < (clave_sol_x - 126) && mouseY > clave_sol_y && mouseY < (clave_sol_y - 341)){
-//        print("tocaste clave de sol")
-//        } else if(mouseX > cuarto_x && mouseX < (cuarto_x - 62) && mouseY > cuarto_y && mouseY < (cuarto_y - 197)) {
-//        print("tocaste cuarto")
-//        } else if(mouseX > acento_x && mouseX < (acento_x - 79) && mouseY > acento_y && mouseY < (acento_y - 54)) {
-//        print("tocaste acento")
-//        } else if(mouseX > fff_x && mouseX < (fff_x - 192) && mouseY > fff_y && mouseY < (fff_y - 113)) {
-//        print("tocaste fff")
-//        } else if(mouseX > sostenido_x && mouseX < (sostenido_x - 45) && mouseY > sostenido_y && mouseY < (sostenido_y - 154)) {
-//        print("sostenido")
-//        }
